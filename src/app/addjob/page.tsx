@@ -1,6 +1,7 @@
 "use client";
 import TokenField from "@/components/TokenField";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { PostData } from "../lib/API";
 
 interface jobDataVariable {
   company_name: string;
@@ -35,9 +36,7 @@ function page() {
     jobData["location"] = locationData;
     jobData["skills"] = skillsData;
 
-
-    
-    console.log(jobData);
+    PostData("api/add_job", jobData);
   };
 
   const onChangeHandler = (e: any) => {
