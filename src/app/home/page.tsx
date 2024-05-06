@@ -16,6 +16,7 @@ function page() {
               </div>
               <div>Senior Developer</div>
               <div>company name</div>
+
               <div className="mt-3">United Kingdom</div>
             </div>
           );
