@@ -14,7 +14,7 @@ const TokenField: React.FC<TokenFieldProps> = ({ tokenFieldData, setTokenFieldDa
   };
   const onKeyDownHandler = (e: any) => {
     if (!input || tokenFieldData.includes(input)) return;
-    if (e.keyCode == 13) {
+    if (e.keyCode == 13) {  
       setTokenFieldData([...tokenFieldData, input]);
       setInput("");
     }
