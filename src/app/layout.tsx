@@ -26,7 +26,7 @@ export default function RootLayout({
         />
       </head>
       <body className={inter.className}>
-        <div className="w-full max-w-screen-lg m-auto">{children}</div>
+        <div className="w-full">{children}</div>
       </body>
     </html>
   );

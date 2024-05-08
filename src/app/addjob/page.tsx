@@ -40,6 +40,9 @@ function page() {
   };
 
   const onChangeHandler = (e: any) => {
+    if (["minimum_pay", "maximum_pay"].includes(e.target.name)) {
+      e.target.value = e.target.value.replace(/\D/g, "");
+    }
     setJobData({ ...jobData, [e.target.name]: e.target.value });
   };
 
@@ -139,7 +142,10 @@ function page() {
           keyName={"skills"}
         />
       </div>
-      <button className="p-3 px-6 rounded text-white bg-primary w-fit" onClick={addJobHandler}>
+      <button
+        className="p-3 px-6 rounded text-white bg-primary w-fit"
+        onClick={addJobHandler}
+      >
         Add Job
       </button>
     </div>
