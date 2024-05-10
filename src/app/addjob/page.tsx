@@ -1,10 +1,12 @@
 "use client";
 import TokenField from "@/components/TokenField";
+import { NextResponse } from "next/server";
 import { useState } from "react";
 import { PostData } from "../lib/API";
 
 interface jobDataVariable {
   company_name: string;
+  company_image: string;
   job_designation: string;
   job_type: string[];
   minimum_pay: number;
@@ -21,6 +23,7 @@ function page() {
 
   const [jobData, setJobData] = useState<jobDataVariable>({
     company_name: "",
+    company_image: "",
     job_designation: "",
     job_type: jobTypeData,
     minimum_pay: 0,
@@ -36,14 +39,25 @@ function page() {
     jobData["location"] = locationData;
     jobData["skills"] = skillsData;
 
-    PostData("api/add_job", jobData);
+    PostData("api/add_job", jobData, updateAddJobHandler);
+  };
+
+  const updateAddJobHandler = (response: any) => {
+    if (response.data.success) {
+      // window.location.reload();
+    }
   };
 
   const onChangeHandler = (e: any) => {
     if (["minimum_pay", "maximum_pay"].includes(e.target.name)) {
       e.target.value = e.target.value.replace(/\D/g, "");
     }
-    setJobData({ ...jobData, [e.target.name]: e.target.value });
+
+    if (e.target.name === "company_image") {
+      setJobData({ ...jobData, [e.target.name]: e.target.files[0] });
+    } else {
+      setJobData({ ...jobData, [e.target.name]: e.target.value });
+    }
   };
 
   return (
@@ -57,6 +71,17 @@ function page() {
           type={"text"}
           name="company_name"
           onChange={onChangeHandler}
+        />
+      </div>
+      <div className="w-full flex flex-col gap-1">
+        <label className="text-sm font-semibold" htmlFor="">
+          Company Logo
+        </label>
+        <input
+          onChange={onChangeHandler}
+          className="outline-none rounded-md  py-2"
+          type={"file"}
+          name="company_image"
         />
       </div>
       <div className="w-full flex flex-col gap-1">
@@ -142,10 +167,7 @@ function page() {
           keyName={"skills"}
         />
       </div>
-      <button
-        className="p-3 px-6 rounded text-white bg-primary w-fit"
-        onClick={addJobHandler}
-      >
+      <button className="p-3 px-6 rounded text-white bg-primary w-fit" onClick={addJobHandler}>
         Add Job
       </button>
     </div>

@@ -5,9 +5,9 @@ import { NextRequest, NextResponse } from "next/server";
 connectDb();
 export async function GET(req: NextRequest) {
   try {
-      let query = req.nextUrl.searchParams;
-      let limit = query.get("limit");
-      console.log(limit);
+    let query = req.nextUrl.searchParams;
+    let limit = query.get("limit");
+
     const jobData = await Job.find({});
 
     return NextResponse.json({
