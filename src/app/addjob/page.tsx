@@ -2,7 +2,7 @@
 import TokenField from "@/components/TokenField";
 import { NextResponse } from "next/server";
 import { useState } from "react";
-import { PostData } from "../lib/API";
+import { PostData, PostFormData } from "../lib/API";
 
 interface jobDataVariable {
   company_name: string;
@@ -39,7 +39,7 @@ function page() {
     jobData["location"] = locationData;
     jobData["skills"] = skillsData;
 
-    PostData("api/add_job", jobData, updateAddJobHandler);
+    PostFormData("api/add_job", jobData, updateAddJobHandler);
   };
 
   const updateAddJobHandler = (response: any) => {
@@ -47,8 +47,22 @@ function page() {
       // window.location.reload();
     }
   };
+  const convertToBas64 = (file: any) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
 
-  const onChangeHandler = (e: any) => {
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  const onChangeHandler = async (e: any) => {
     if (["minimum_pay", "maximum_pay"].includes(e.target.name)) {
       e.target.value = e.target.value.replace(/\D/g, "");
     }

@@ -1,33 +1,37 @@
 import { connectDb } from "@/app/lib/connectDB";
 import Job from "@/models/Job";
 import { NextRequest, NextResponse } from "next/server";
-import cloudinary from "cloudinary";
-import { readFile } from "fs";
-
+import { UploadApiErrorResponse, UploadApiResponse, v2 as cloudinary } from "cloudinary";
+import { formDataToJson } from "@/app/lib/formDataToJSon";
 connectDb();
-cloudinary.v2.config({
+
+cloudinary.config({
   cloud_name: "dkc5pkj9d",
   api_key: "628293962455536",
   api_secret: "ELgUUYn10W29OkZOt8Bek-fbhhU",
 });
+interface CloudinaryResults {
+  secure_url: string;
+}
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
-    const companyImageFile =await readFile(companyImageFile.path);
-    await cloudinary.v2.uploader
-      .unsigned_upload(companyImageFile, "media_preset")
-      .then((result) => console.log(result))
-      .catch((error) => console.log(error));
+    const bodyData: Record<string, string | Blob> = formDataToJson(formData);
 
-    return
-    let jobData = {
-      ...bodyData,
-      ["company_image"]: "",
-    };
-    jobData = new Job(bodyData);
+    const file = formData.get("company_image") as File;
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
+    let cloudinaryResults: CloudinaryResults = await new Promise((resolve) => {
+      cloudinary.uploader
+        .upload_stream((error: UploadApiErrorResponse, result: UploadApiResponse) => {
+          resolve(result);
+        })
+        .end(buffer);
+    });
 
-    console.log(jobData, "d");
+    bodyData.company_image = cloudinaryResults?.secure_url;
+    let jobData = new Job(bodyData);
 
     const savedData = await jobData.save();
 
@@ -38,7 +42,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({
       success: "false",
-      results: [],
+      results: {},
       info: error,
     });
   }
