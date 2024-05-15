@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next/font": "^14.2.3",
     "axios": "^1.6.8",
     "cloudinary": "^2.2.0",
     "mongoose": "^8.3.3",
