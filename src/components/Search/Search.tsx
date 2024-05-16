@@ -1,17 +1,48 @@
 "use client";
 
-import React from "react";
 import background from "@/assets/bg-pattern-detail-footer.svg";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { ChangeEvent, useCallback, useState } from "react";
+
+interface Search {
+  title: string;
+  location: string;
+  isFullTime: boolean;
+}
 
 function Search() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const title = searchParams.get("title");
+  const location = searchParams.get("location");
+  const isFullTime = searchParams.get("isFullTime");
+  const [searchParameters, setSearchParameters] = useState({
+    title: title,
+    location: location,
+    isFullTime: isFullTime,
+  });
 
-  const title = searchParams.get("title") || "";
-  const location = searchParams.get("location") || "";
+  const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchParameters({ ...searchParameters, [e.target.name]: e.target.value });
+  };
 
-  const onInputChange = () => {};
+  const createQueryString = useCallback(
+    (searchObj: Object) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      Object.entries(searchObj).map(([key, value]) => {
+        params.set(key, value);
+      });
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+  const searchHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+    router.push(pathname + "?" + createQueryString(searchParameters));
+  };
   return (
     <div className={`flex flex-col gap-4 py-8 max-w-screen-lg m-auto`}>
       <Image
@@ -30,6 +61,7 @@ function Search() {
         <div className="flex gap-3 border-r-[1px] items-center p-4 px-4">
           <i className="fa-brands fa-searchengin text-primary"></i>
           <input
+            name="title"
             onChange={onInputChange}
             className=" h-full outline-none"
             type={"text"}
@@ -39,6 +71,8 @@ function Search() {
         <div className="flex gap-3 items-center p-4 border-r-[1px] px-4">
           Location
           <input
+            name="location"
+            
             onChange={onInputChange}
             className="h-full outline-none"
             type={"text"}
@@ -48,14 +82,16 @@ function Search() {
         <div className="flex gap-3 p-4 w-full border-r-[1px] items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <input
+              name="isFullTime"
               onChange={onInputChange}
               className="outline-none h-full"
               type={"checkbox"}
-              placeholder="Filter by title"
             />
             <div>Full time only</div>
           </div>
-          <button className="bg-primary p-2 px-3 rounded-lg text-white">Search</button>
+          <button className="bg-primary p-2 px-3 rounded-lg text-white" onClick={searchHandler}>
+            Search
+          </button>
         </div>
       </div>
     </div>
