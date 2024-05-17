@@ -72,7 +72,6 @@ function Search() {
           Location
           <input
             name="location"
-            
             onChange={onInputChange}
             className="h-full outline-none"
             type={"text"}

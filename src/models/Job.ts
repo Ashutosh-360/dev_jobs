@@ -1,7 +1,21 @@
-import { timeStamp } from "console";
-import mongoose from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 
-const jobSchema = new mongoose.Schema(
+// Define the TypeScript interface for the Job document
+interface IJob extends Document {
+  company_name: string;
+  company_image: string;
+  job_designation: string;
+  job_type: string[];
+  minimum_pay: number;
+  maximum_pay: number;
+  location: string[];
+  company_description: string;
+  job_description: string;
+  skills: string[];
+}
+
+// Define the Mongoose schema with TypeScript
+const jobSchema: Schema<IJob> = new mongoose.Schema(
   {
     company_name: {
       type: String,
@@ -51,6 +65,7 @@ const jobSchema = new mongoose.Schema(
   { timestamps: true, versionKey: false }
 );
 
-const Job = mongoose.models.Job || mongoose.model("Job", jobSchema);
+// Define the Mongoose model with TypeScript
+const Job: Model<IJob> = mongoose.models.Job || mongoose.model<IJob>("Job", jobSchema);
 
 export default Job;
