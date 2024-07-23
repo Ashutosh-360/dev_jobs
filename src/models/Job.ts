@@ -25,6 +25,7 @@ const jobSchema: Schema<IJob> = new mongoose.Schema(
     company_image: {
       type: String,
       default: "",
+      required: true,
     },
     job_designation: {
       type: String,
@@ -38,10 +39,12 @@ const jobSchema: Schema<IJob> = new mongoose.Schema(
     minimum_pay: {
       type: Number,
       default: 0,
+      required: true,
     },
     maximum_pay: {
       type: Number,
       default: 0,
+      required: true,
     },
     location: {
       type: [String],
@@ -49,12 +52,14 @@ const jobSchema: Schema<IJob> = new mongoose.Schema(
       default: [],
     },
     company_description: {
-      type: String,
+      type: String, 
       default: "",
+      required: true,
     },
     job_description: {
       type: String,
       default: "",
+      required: true,
     },
     skills: {
       type: [String],

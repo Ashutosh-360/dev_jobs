@@ -1,26 +1,12 @@
 "use client";
-import Search from "@/components/Search/Search";
-import { NextApiResponse } from "next";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { GetData } from "../../lib/API";
 import Image from "next/image";
-import { ObjectId } from "mongoose";
-interface Job {
-  _id: ObjectId;
-  company_name: string;
-  job_designation: string;
-  job_type: [string];
-  minimum_pay: number;
-  maximum_pay: number;
-  location: [string];
-  company_description: string;
-  job_description: string;
-  skills: [string];
-  company_image: string;
-}
+import { JobType } from "@/app/lib/type";
+
 async function page() {
-  const [jobData, setJobData] = useState<Job[]>([]);
+  const [jobData, setJobData] = useState<JobType[]>([]);
 
   useEffect(() => {
     //direct api calling in useEffect will not load loader
@@ -28,14 +14,14 @@ async function page() {
   }, []);
 
   function callFunc() {
-    GetData("api/job_list", { limit: 5 }, getJobDataHandler);
+    GetData("api/job_list", { limit: 10 }, getJobDataHandler);
   }
   const getJobDataHandler = (response: any) => {
     setJobData(response.data.results);
   };
   return (
     <div className="w-full max-w-screen-lg grid grid-cols-3 gap-2 m-auto py-6">
-      {jobData?.map((ele: Job, index: number) => {
+      {jobData?.map((ele: JobType, index: number) => {
         return (
           <Link
             href={`/job_details/${ele._id}`}
