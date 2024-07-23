@@ -6,7 +6,9 @@ import React, { useEffect, useState } from "react";
 import { GetData } from "../../lib/API";
 import Image from "next/image";
 import { ObjectId } from "mongoose";
+import formatJobTime from "@/app/lib/DateTimeFormat/formatJobTime.js";
 interface Job {
+  createdAt: any;
   _id: ObjectId;
   company_name: string;
   job_designation: string;
@@ -50,7 +52,7 @@ async function page() {
                 src={ele?.company_image}
                 alt={ele?.company_image}
               />
-              <div className="">5h ago</div>
+              <div className="">{formatJobTime(ele.createdAt)}</div>
               <div>*</div>
               <div>{ele.job_type}</div>
             </div>
