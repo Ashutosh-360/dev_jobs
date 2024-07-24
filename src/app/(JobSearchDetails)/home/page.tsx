@@ -5,16 +5,25 @@ import { GetData } from "../../lib/API";
 import Image from "next/image";
 import { JobType } from "@/app/lib/type";
 import formatJobTime from "@/app/lib/DateTimeFormat/formatJobTime.js";
-async function page() {
+import { useSearchParams } from "next/navigation";
+function page() {
   const [jobData, setJobData] = useState<JobType[]>([]);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     //direct api calling in useEffect will not load loader
     callFunc();
-  }, []);
+  }, [searchParams]);
 
   function callFunc() {
-    GetData("api/job_list", { limit: 10 }, getJobDataHandler);
+    let payload = {
+      limit: 10,
+      page: 1,
+      job_designation: searchParams?.get("job_designation") || "",
+      location: searchParams?.get("location") || "",
+      is_full_time: searchParams?.get("is_full_time") || false,
+    };
+    GetData("api/job_list", payload, getJobDataHandler);
   }
   const getJobDataHandler = (response: any) => {
     setJobData(response.data.results);

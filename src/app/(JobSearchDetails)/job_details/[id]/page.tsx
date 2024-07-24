@@ -41,14 +41,14 @@ const page: FC<Params> = ({ params }) => {
           <div className="flex gap-1">
             {jobDetails?.job_type[0]?.split(",").map((item: any) => {
               return (
-                <div className="p-1 px-2 bg-green-700 text-sm rounded-md text-white">{item}</div>
+                <div key={item} className="p-1 px-2 bg-green-700 text-sm rounded-md text-white">{item}</div>
               );
             })}
           </div>
           <div className="flex gap-1">
             {jobDetails?.location[0]?.split(",").map((item: any) => {
               return (
-                <div className="p-1 px-2 bg-yellow-600 text-sm rounded-md text-white">{item}</div>
+                <div key={item} className="p-1 px-2 bg-yellow-600 text-sm rounded-md text-white">{item}</div>
               );
             })}
           </div>

@@ -12,36 +12,29 @@ interface Search {
 }
 
 function Search() {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const searchParams=useSearchParams();
   const router = useRouter();
-  const title = searchParams.get("title");
-  const location = searchParams.get("location");
-  const isFullTime = searchParams.get("isFullTime");
+  const pathname=usePathname();
+  const title = searchParams?.get("title");
+  const location = searchParams?.get("location");
+  const isFullTime = searchParams?.get("isFullTime")==="true"?true:false;
   const [searchParameters, setSearchParameters] = useState({
     title: title,
     location: location,
     isFullTime: isFullTime,
   });
-
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchParameters({ ...searchParameters, [e.target.name]: e.target.value });
   };
 
-  const createQueryString = useCallback(
-    (searchObj: Object) => {
-      const params = new URLSearchParams(searchParams.toString());
 
-      Object.entries(searchObj).map(([key, value]) => {
-        params.set(key, value);
-      });
-
-      return params.toString();
-    },
-    [searchParams]
-  );
-  const searchHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-    router.push(pathname + "?" + createQueryString(searchParameters));
+  const searchHandler = () => {
+    const params = new URLSearchParams();
+    if (searchParameters.title) params.set("job_designation", searchParameters.title);
+    if (searchParameters.location) params.set("location", searchParameters.location);
+    if (searchParameters.isFullTime) params.set("isFullTime", String(searchParameters.isFullTime));
+    
+    router.push(`${pathname}?${params.toString()}`);
   };
   return (
     <div className={`flex flex-col gap-4 py-8 max-w-screen-lg m-auto`}>
@@ -66,6 +59,7 @@ function Search() {
             className=" h-full outline-none"
             type={"text"}
             placeholder="Filter by title"
+            value={searchParameters.title}
           />
         </div>
         <div className="flex gap-3 items-center p-4 border-r-[1px] px-4">
@@ -76,6 +70,7 @@ function Search() {
             className="h-full outline-none"
             type={"text"}
             placeholder="Filter by location"
+            value={searchParameters.location}
           />
         </div>
         <div className="flex gap-3 p-4 w-full border-r-[1px] items-center justify-between px-4">
@@ -85,6 +80,7 @@ function Search() {
               onChange={onInputChange}
               className="outline-none h-full"
               type={"checkbox"}
+              checked={searchParameters.location}
             />
             <div>Full time only</div>
           </div>
